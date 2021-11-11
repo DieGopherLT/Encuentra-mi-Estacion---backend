@@ -1,0 +1,30 @@
+{
+  "name": "leccion-kevin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src/**/*.ts --exec ts-node src/index.ts",
+    "compile": "tsc",
+    "compile:start": "tsc && node dist/index.js",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^16.11.6",
+    "nodemon": "^2.0.14",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.2",
+    "pug": "^3.0.2",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.38"
+  }
+}
