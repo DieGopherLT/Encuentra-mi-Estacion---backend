@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
-import { getStations } from '../repository/station.repo';
+import { getStationsNameAndId } from '../repository/station.repo';
 
 export const fecthStations = async (req: Request, res: Response) => {
     try {
-        const stations = await getStations();
+        const stations = await getStationsNameAndId();
         res.status(200).json({ stations });
     } catch(e) {
         console.log(e);
