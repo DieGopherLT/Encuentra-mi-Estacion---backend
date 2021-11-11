@@ -1,4 +1,5 @@
 import express, { Application } from 'express';
+import cors from 'cors';
 
 import StationRouter from '../routes/station.route';
 
@@ -26,6 +27,7 @@ export class Server {
     private middleware() {
         this.app.use(express.urlencoded({ extended: true }));
         this.app.use(express.json());
+        this.app.use(cors());
     }
 
     start() {
