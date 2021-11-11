@@ -1,11 +1,11 @@
-import { Entity, PrimaryColumn, Column, ManyToOne, JoinTable } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 import { Station } from './Station.model';
 
 
 @Entity()
 export class StationConnection {
 
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn('increment')
     id?: number;
 
     @ManyToOne(() => Station, station => station.originConnection)
