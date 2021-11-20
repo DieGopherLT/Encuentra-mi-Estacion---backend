@@ -12,6 +12,7 @@ export const fecthStations = async (req: Request, res: Response) => {
     }
 }
 
+//start in this point
 export const getShortestPath = async (req: Request, res: Response) => {
     
     // These are the id of origin and destiny sent from GUI
