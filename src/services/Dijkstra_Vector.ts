@@ -20,10 +20,10 @@ export class Dijkstra_Vector {
     }
 
     public actualice ( definitive_element : Dijkstra_Element, vertexes : Vertex[] ) : void {
+        
         definitive_element.vertex.edges.forEach(edge => {
 
             this.elements.forEach(dij_elem => {
-
                 if (edge.destination.id == dij_elem.vertex.id) {
 
                     if (!dij_elem.definitive && (definitive_element.weight + edge.wegiht) < dij_elem.weight) {
@@ -33,6 +33,7 @@ export class Dijkstra_Vector {
                     }
                 }
             })
+            
         });
     }
 }

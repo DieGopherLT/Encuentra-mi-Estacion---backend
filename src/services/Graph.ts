@@ -1,65 +1,78 @@
 // import {<nombre>} from "<ruta_relativa> ./<nombre>"
-import { Vertex } from "./Vertex";
+import { Vertex } from './Vertex';
 import { Dijkstra_Vector } from './Dijkstra_Vector';
-import { Dijkstra_Element } from './Dijkstra_Element';
+import { dijkstra } from './Dijkstra';
+import { Connection } from '../types/connection';
+import { inspect } from 'util';
 
 export class Graph {
     //<modificador> <nombre_propiedad> : <tipo>
     public vertexes : Vertex[];
     public vector : Dijkstra_Vector | null;
+
     //constructor (args : <tipo> c/u) {}
-    constructor (vertexes : Vertex[]){
-        //Estaciones
-        //Conexiones
+    constructor (connections : Connection[]) {
         
-        this.vertexes = vertexes;
+        this.vertexes = new Array<Vertex>();
+        connections.forEach(connection => {
+
+            let originVertex = this.getVertex(connection.originId, connection.originName, 
+                                              connection.originLatitude,connection.originLongitude);
+            let destinyVertex = this.getVertex(connection.destinyId, connection.destinyName, 
+                                               connection.destinyLatitude,connection.destinyLongitude);
+
+            originVertex.addEdge(destinyVertex, connection.weight)
+            destinyVertex.addEdge(originVertex, connection.weight)
+            
+        });
+        
         this.vector = null
     }
+
+    private addEdge(origin : Vertex, destination : Vertex, weight : number) 
+    {
+        this.vertexes.forEach(vertex => {
+            if (vertex.id == origin.id)
+                vertex.addEdge(destination, weight);
+        });
+    }
+
+    private getVertex(id : number, name : string = '', latitude : string = '', longitude : string = '') : Vertex
+    {
+        for (let index = 0; index < this.vertexes.length; index++) {       
+            if (id == this.vertexes[index].id)
+                return this.vertexes[index];
+        }        
+
+        let vertex = this.addVertex(id, name, latitude, longitude);
+        return vertex;
+    }
+
+    private addVertex(id : number, name : string, latitude : string, longitude : string) : Vertex
+    {
+        let newVertex = new Vertex(id, name, latitude, longitude);
+        this.vertexes.push(newVertex)
+        return newVertex;
+    }
+
     //<modificador> método (args : <tipo> c/u) : <tipo> {}
-    public dijkstra(initial_vertex : Vertex) : void {
-        var zero : number = 0.0;
-        var infinite : number = 1/zero;
+    dijkstra(origin_id : number, desination_id : number) : any[]
+    {
+        let origin_vertex  = this.getVertex(origin_id);
+        let destination_vertex = this.getVertex(desination_id);
+        let path = new Array<any>();
+        let vertex_path = dijkstra(this, origin_vertex, destination_vertex);
         
-        this.vector = new Dijkstra_Vector(this, initial_vertex, infinite);
-        
-        while (!this.solution()) {
-            var curret = this.selection();
-            this.vector.actualice( curret, this.vertexes );
-        }
-        
-    }
-    
-    private solution() : boolean {
+        vertex_path.forEach(vertex => {
+            path.push({
+                "id" : vertex.id,
+                "name" : vertex.name,
+                "latitude" : vertex.latitude, 
+                "longitude" : vertex.longitude 
+            })
+        });
 
-        this.vector?.elements.forEach( dij_elem => {
-            if(!dij_elem.definitive)
-                return false;
-        })
-
-        return true;
-    }
-
-    private selection() : Dijkstra_Element {
-        var selected = this.vector?.elements[0];
-
-        this.vector?.elements.forEach( dij_elem => {
-            if (!dij_elem.definitive)
-                selected = dij_elem;
-        })
-
-        this.vector?.elements.forEach( dij_elem => {
-            //@ts-ignore
-            if (!dij_elem.definitive && dij_elem.weight < selected.weight)
-            selected = dij_elem;
-            
-            //@ts-ignore
-            selected.definitive = true;
-            
-            return selected;
-        })
-        
-        //@ts-ignore
-        return selected;
+        return path;
     }
 }
 
